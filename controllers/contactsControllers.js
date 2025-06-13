@@ -19,6 +19,19 @@ const getOneContactController = async (req, res) => {
   res.json(result);
 };
 
+const createContactController = async (req, res) => {
+  const result = await contactsService.createContact(req.body);
+
+  res.status(201).json(result);
+};
+
+const updateContactController = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.updateContact(id, req.body);
+
+  res.json(result);
+};
+
 const deleteContactController = async (req, res) => {
   const { id } = req.params;
   const result = await contactsService.deleteContact(id);
@@ -29,10 +42,6 @@ const deleteContactController = async (req, res) => {
 
   res.json(result);
 };
-
-const createContactController = (req, res) => {};
-
-const updateContactController = (req, res) => {};
 
 export default {
   getAllContactsController: ctrlWrapper(getAllContactsController),
