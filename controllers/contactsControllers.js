@@ -1,11 +1,43 @@
-import contactsService from "../services/contactsServices.js";
+import * as contactsService from "../services/contactsServices.js";
 
-export const getAllContacts = (req, res) => {};
+import HttpError from "../helpers/HttpError.js";
+import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
-export const getOneContact = (req, res) => {};
+const getAllContactsController = async (req, res) => {
+  const result = await contactsService.getAllContacts();
+  res.json(result);
+};
 
-export const deleteContact = (req, res) => {};
+const getOneContactController = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.getOneContact(id);
 
-export const createContact = (req, res) => {};
+  if (!result) {
+    throw HttpError(404, `Contact with id: ${id} not found`);
+  }
 
-export const updateContact = (req, res) => {};
+  res.json(result);
+};
+
+const deleteContactController = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.deleteContact(id);
+
+  if (!result) {
+    throw HttpError(404, `Contact with id: ${id} not found`);
+  }
+
+  res.json(result);
+};
+
+const createContactController = (req, res) => {};
+
+const updateContactController = (req, res) => {};
+
+export default {
+  getAllContactsController: ctrlWrapper(getAllContactsController),
+  getOneContactController: ctrlWrapper(getOneContactController),
+  deleteContactController: ctrlWrapper(deleteContactController),
+  createContactController: ctrlWrapper(createContactController),
+  updateContactController: ctrlWrapper(updateContactController),
+};
