@@ -4,6 +4,8 @@ import cors from "cors";
 
 import contactsRouter from "./routes/contactsRouter.js";
 
+import "./db/sequelize.js";
+
 const app = express();
 
 app.use(morgan("tiny"));
