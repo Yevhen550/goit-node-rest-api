@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { nanoid } from "nanoid";
+import Contact from "../db/Contact.js";
 
 const contactsPath = path.resolve("db", "contacts.json");
 
@@ -20,17 +21,7 @@ export const getOneContact = async (contactId) => {
   return contact || null;
 };
 
-export const createContact = async (data) => {
-  const contacts = await getAllContacts();
-  const newContact = {
-    id: nanoid(),
-    ...data,
-  };
-  contacts.push(newContact);
-  await updateListContact(contacts);
-
-  return newContact;
-};
+export const createContact = (payload) => Contact.create(payload);
 
 export const deleteContact = async (contactId) => {
   const contacts = await getAllContacts();

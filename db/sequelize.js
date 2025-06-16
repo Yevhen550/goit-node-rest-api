@@ -1,8 +1,6 @@
 import { Sequelize } from "sequelize";
-
-// Host name: dpg-d16jl4umcj7s73c7m7ng-a.frankfurt-postgres.render.com
-
-console.log(process.env);
+import dotenv from "dotenv";
+dotenv.config();
 
 const sequelize = new Sequelize({
   dialect: process.env.DATABASE_DIALECT,
