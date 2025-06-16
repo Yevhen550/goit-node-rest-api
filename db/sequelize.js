@@ -1,14 +1,14 @@
 import { Sequelize } from "sequelize";
-
-// Host name: dpg-d16jl4umcj7s73c7m7ng-a.frankfurt-postgres.render.com
+import dotenv from "dotenv";
+dotenv.config();
 
 const sequelize = new Sequelize({
-  dialect: "postgres",
-  host: "dpg-d16jl4umcj7s73c7m7ng-a.frankfurt-postgres.render.com",
-  port: 5432,
-  database: "db_contacts_bea7",
-  username: "db_contacts_bea7_user",
-  password: "UFfEh1nUD5lLaUrdNLCtBi0wHpLrIH1f",
+  dialect: process.env.DATABASE_DIALECT,
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
+  database: process.env.DATABASE_NAME,
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
   dialectOptions: {
     ssl: true,
   },
