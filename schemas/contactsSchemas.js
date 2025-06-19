@@ -11,7 +11,7 @@ export const createContactSchema = Joi.object({
     })
     .required(),
   phone: Joi.string().required(),
-  favorite: Joi.boolean(),
+  favorite: Joi.boolean().required(),
   type: Joi.string().valid(),
 });
 
