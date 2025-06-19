@@ -21,3 +21,11 @@ export const removeContact = async (contactId) => {
   await contact.destroy();
   return contact;
 };
+
+export const updateStatusContact = async (contactId, body) => {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+  
+  await contact.update({ favorite: body.favorite });
+  return contact;
+};

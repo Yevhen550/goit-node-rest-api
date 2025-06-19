@@ -20,7 +20,7 @@ try {
 } catch (error) {
   console.log("Failed connect database");
   console.log(error);
-  //   process.exit(1);
+  process.exit(1);
 }
 
 export default sequelize;
