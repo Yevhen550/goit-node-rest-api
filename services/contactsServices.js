@@ -1,45 +1,31 @@
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import { nanoid } from "nanoid";
 import Contact from "../db/Contact.js";
 
-const contactsPath = path.resolve("db", "contacts.json");
+export const listContacts = () => Contact.findAll();
 
-const updateListContact = (contacts) =>
-  fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+export const getContactById = (contactId) => Contact.findByPk(contactId);
 
-export const getAllContacts = async () => {
-  const data = await fs.readFile(contactsPath, "utf-8");
-
-  return JSON.parse(data);
-};
-
-export const getOneContact = async (contactId) => {
-  const contacts = await getAllContacts();
-  const contact = contacts.find((item) => item.id === contactId);
-
-  return contact || null;
-};
-
-export const createContact = (payload) => Contact.create(payload);
-
-export const deleteContact = async (contactId) => {
-  const contacts = await getAllContacts();
-  const idx = contacts.findIndex((item) => item.id === contactId);
-  if (idx === -1) return null;
-  const [result] = contacts.splice(idx, 1);
-  await updateListContact(contacts);
-
-  return result;
-};
+export const addContact = (payload) => Contact.create(payload);
 
 export const updateContact = async (contactId, newData) => {
-  const contacts = await getAllContacts();
-  const idx = contacts.findIndex((item) => item.id === contactId);
-  if (idx === -1) return null;
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
 
-  contacts[idx] = { ...contacts[idx], ...newData };
-  await updateListContact(contacts);
+  await contact.update(newData);
+  return contact;
+};
 
-  return contacts[idx];
+export const removeContact = async (contactId) => {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+
+  await contact.destroy();
+  return contact;
+};
+
+export const updateStatusContact = async (contactId, body) => {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+  
+  await contact.update({ favorite: body.favorite });
+  return contact;
 };

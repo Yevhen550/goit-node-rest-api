@@ -1,16 +1,15 @@
 import * as contactsService from "../services/contactsServices.js";
-
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 const getAllContactsController = async (req, res) => {
-  const result = await contactsService.getAllContacts();
+  const result = await contactsService.listContacts();
   res.json(result);
 };
 
 const getOneContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.getOneContact(id);
+  const result = await contactsService.getContactById(id);
 
   if (!result) {
     throw HttpError(404);
@@ -24,7 +23,7 @@ const createContactController = async (req, res) => {
     throw HttpError(400, "Body must have at least one field");
   }
 
-  const result = await contactsService.createContact(req.body);
+  const result = await contactsService.addContact(req.body);
 
   res.status(201).json(result);
 };
@@ -46,8 +45,23 @@ const updateContactController = async (req, res) => {
 
 const deleteContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.deleteContact(id);
+  const result = await contactsService.removeContact(id);
 
+  if (!result) {
+    throw HttpError(404);
+  }
+
+  res.json(result);
+};
+
+const updateStatusContactController = async (req, res) => {
+  const { id } = req.params;
+
+  if (!("favorite" in req.body)) {
+    throw HttpError(400, "Missing field favorite");
+  }
+
+  const result = await contactsService.updateStatusContact(id, req.body);
   if (!result) {
     throw HttpError(404);
   }
@@ -61,4 +75,5 @@ export default {
   deleteContactController: ctrlWrapper(deleteContactController),
   createContactController: ctrlWrapper(createContactController),
   updateContactController: ctrlWrapper(updateContactController),
+  updateStatusContactController: ctrlWrapper(updateStatusContactController),
 };
