@@ -1,25 +1,26 @@
 import { DataTypes } from "sequelize";
 import sequelize from "./sequelize.js";
+import { emailRegexp } from "../constants/auth.js";
 
-const Contact = sequelize.define("contact", {
-  name: {
+const User = sequelize.define("user", {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      is: emailRegexp,
+    },
+    unique: true,
   },
-  phone: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  favorite: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
 });
 
-// Contact.sync();
+User.sync();
 
-export default Contact;
+export default User;
