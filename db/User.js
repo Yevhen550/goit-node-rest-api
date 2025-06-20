@@ -13,7 +13,10 @@ const User = sequelize.define("user", {
     validate: {
       is: emailRegexp,
     },
-    unique: true,
+    unique: {
+      args: true,
+      msg: "This email already exist",
+    },
   },
   password: {
     type: DataTypes.STRING,
@@ -21,6 +24,6 @@ const User = sequelize.define("user", {
   },
 });
 
-User.sync();
+// User.sync();
 
 export default User;
