@@ -12,6 +12,11 @@ const registerController = async (req, res) => {
   });
 };
 
+const loginController = async (req, res) => {
+  const token = await authServices.loginUser(req.body);
+};
+
 export default {
   registerController: ctrlWrapper(registerController),
+  loginController: ctrlWrapper(loginController),
 };
