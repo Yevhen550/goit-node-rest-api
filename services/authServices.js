@@ -20,7 +20,7 @@ export const loginUser = async ({ email, password }) => {
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) throw HttpError(401, "Email or password is wrong");
 
-  const token = "123456.6549810.196819";
+  const token = process.env.JWT_SECRET;
 
   return token;
 };
