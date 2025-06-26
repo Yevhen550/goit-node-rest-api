@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
   if (!authorization)
     return next(HttpError(401, "Authorization header missing"));
 
-  const [bearer, token] = authorization.split("");
+  const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer")
     return next(HttpError(401, "Authorization header not Bearer"));
 
@@ -20,6 +20,7 @@ const authenticate = async (req, res, next) => {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await findUser({ id });
     if (!user) return next(HttpError(401, "User not found"));
+    req.user = user;
     next();
   } catch (error) {
     next(HttpError(401, error.message));

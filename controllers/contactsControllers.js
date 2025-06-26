@@ -3,7 +3,9 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 const getAllContactsController = async (req, res) => {
-  const result = await contactsService.listContacts();
+  const { id } = req.user;
+
+  const result = await contactsService.listContacts({ owner: id });
   res.json(result);
 };
 
@@ -23,7 +25,8 @@ const createContactController = async (req, res) => {
     throw HttpError(400, "Body must have at least one field");
   }
 
-  const result = await contactsService.addContact(req.body);
+  const { id } = req.user;
+  const result = await contactsService.addContact({ ...req.body, owner: id });
 
   res.status(201).json(result);
 };

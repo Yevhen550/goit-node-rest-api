@@ -1,6 +1,9 @@
 import Contact from "../db/Contact.js";
 
-export const listContacts = () => Contact.findAll();
+export const listContacts = (query) =>
+  Contact.findAll({
+    where: query,
+  });
 
 export const getContactById = (contactId) => Contact.findByPk(contactId);
 
@@ -25,7 +28,7 @@ export const removeContact = async (contactId) => {
 export const updateStatusContact = async (contactId, body) => {
   const contact = await getContactById(contactId);
   if (!contact) return null;
-  
+
   await contact.update({ favorite: body.favorite });
   return contact;
 };
