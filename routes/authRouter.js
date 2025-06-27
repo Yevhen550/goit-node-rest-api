@@ -21,4 +21,6 @@ authRouter.post(
 
 authRouter.get("/current", authenticate, authControllers.getCurrentController);
 
+authRouter.post("/logout", authenticate, authControllers.logoutController);
+
 export default authRouter;
