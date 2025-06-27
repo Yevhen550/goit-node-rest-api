@@ -3,13 +3,16 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 const getAllContactsController = async (req, res) => {
-  const result = await contactsService.listContacts();
+  const { id } = req.user;
+
+  const result = await contactsService.listContacts({ owner: id });
   res.json(result);
 };
 
 const getOneContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.getContactById(id);
+  const { id: owner } = req.user;
+  const result = await contactsService.getContact({ id, owner });
 
   if (!result) {
     throw HttpError(404);
@@ -23,7 +26,8 @@ const createContactController = async (req, res) => {
     throw HttpError(400, "Body must have at least one field");
   }
 
-  const result = await contactsService.addContact(req.body);
+  const { id } = req.user;
+  const result = await contactsService.addContact({ ...req.body, owner: id });
 
   res.status(201).json(result);
 };
@@ -34,7 +38,8 @@ const updateContactController = async (req, res) => {
   }
 
   const { id } = req.params;
-  const result = await contactsService.updateContact(id, req.body);
+  const { id: owner } = req.user;
+  const result = await contactsService.updateContact({ id, owner }, req.body);
 
   if (!result) {
     throw HttpError(404);
@@ -45,7 +50,8 @@ const updateContactController = async (req, res) => {
 
 const deleteContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.removeContact(id);
+  const { id: owner } = req.user;
+  const result = await contactsService.removeContact({ id, owner });
 
   if (!result) {
     throw HttpError(404);
