@@ -11,7 +11,8 @@ const getAllContactsController = async (req, res) => {
 
 const getOneContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.getContactById(id);
+  const { id: owner } = req.user;
+  const result = await contactsService.getContact({ id, owner });
 
   if (!result) {
     throw HttpError(404);
@@ -37,7 +38,8 @@ const updateContactController = async (req, res) => {
   }
 
   const { id } = req.params;
-  const result = await contactsService.updateContact(id, req.body);
+  const { id: owner } = req.user;
+  const result = await contactsService.updateContact({ id, owner }, req.body);
 
   if (!result) {
     throw HttpError(404);
@@ -48,7 +50,8 @@ const updateContactController = async (req, res) => {
 
 const deleteContactController = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.removeContact(id);
+  const { id: owner } = req.user;
+  const result = await contactsService.removeContact({ id, owner });
 
   if (!result) {
     throw HttpError(404);

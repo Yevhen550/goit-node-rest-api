@@ -1,6 +1,4 @@
 import * as authServices from "../services/authServices.js";
-
-import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 const registerController = async (req, res) => {
@@ -18,7 +16,17 @@ const loginController = async (req, res) => {
   res.json({ token });
 };
 
+const getCurrentController = (req, res) => {
+  const { username, email } = req.user;
+
+  res.json({
+    username,
+    email,
+  });
+};
+
 export default {
   registerController: ctrlWrapper(registerController),
   loginController: ctrlWrapper(loginController),
+  getCurrentController: ctrlWrapper(getCurrentController),
 };
