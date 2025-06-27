@@ -1,5 +1,6 @@
 import * as authServices from "../services/authServices.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
+import { listContacts } from "../services/contactsServices.js";
 
 const registerController = async (req, res) => {
   const newUser = await authServices.registerUser(req.body);
@@ -16,12 +17,22 @@ const loginController = async (req, res) => {
   res.json({ token });
 };
 
-const getCurrentController = (req, res) => {
-  const { username, email } = req.user;
+const getCurrentController = async (req, res) => {
+  const { username, email, id } = req.user;
+  const contacts = await listContacts({ owner: id });
 
   res.json({
     username,
     email,
+    contacts,
+  });
+};
+
+const logoutController = async (req, res) => {
+  await authServices.logoutUser(req.user);
+
+  res.json({
+    message: "Logout successfully",
   });
 };
 
@@ -29,4 +40,5 @@ export default {
   registerController: ctrlWrapper(registerController),
   loginController: ctrlWrapper(loginController),
   getCurrentController: ctrlWrapper(getCurrentController),
+  logoutController: ctrlWrapper(logoutController),
 };

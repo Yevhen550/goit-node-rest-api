@@ -1,10 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-
 import User from "../db/User.js";
 import HttpError from "../helpers/HttpError.js";
-
-const { JWT_SECRET } = process.env;
+import { listContacts } from "./contactsServices.js";
+import { createToken } from "../helpers/jwt.js";
 
 export const findUser = (query) =>
   User.findOne({
@@ -32,7 +30,22 @@ export const loginUser = async ({ email, password }) => {
     id: user.id,
   };
 
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+  const token = createToken(payload);
+  user.token = token;
+  await user.save();
+  const contacts = await listContacts({ owner: user.id });
 
-  return token;
+  return {
+    token,
+    contacts,
+  };
+};
+
+export const logoutUser = async ({ email }) => {
+  const user = await findUser({ email });
+
+  if (!user) throw HttpError(401, "User not found");
+
+  user.token = "";
+  await user.save();
 };
