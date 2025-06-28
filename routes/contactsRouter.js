@@ -6,6 +6,7 @@ import {
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
 import authenticate from "../middlewars/authenticate.js";
+import upload from "../middlewars/upload.js";
 
 const contactsRouter = express.Router();
 
@@ -17,6 +18,7 @@ contactsRouter.get("/:id", contactsControllers.getOneContactController);
 
 contactsRouter.post(
   "/",
+  upload.single("avatar"),
   validateBody(createContactSchema),
   contactsControllers.createContactController
 );

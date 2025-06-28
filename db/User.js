@@ -28,14 +28,8 @@ const User = sequelize.define("user", {
   token: {
     type: DataTypes.STRING,
     allowNull: true,
-    // defaultValue: null,
   },
-
-  // subscription: {
-  //   type: DataTypes.ENUM,
-  //   values: ["starter", "pro", "business"],
-  //   defaultValue: "starter",
-  // },
+  avatarURL: DataTypes.STRING,
 });
 
 // User.sync({ alter: true });
