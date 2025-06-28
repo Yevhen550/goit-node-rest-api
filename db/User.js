@@ -16,26 +16,20 @@ const User = sequelize.define("user", {
     },
     unique: {
       args: true,
-      msg: "This email already exist",
+      msg: "Email in use",
     },
-  },
-
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
   },
 
   token: {
     type: DataTypes.STRING,
     allowNull: true,
-    // defaultValue: null,
   },
 
-  // subscription: {
-  //   type: DataTypes.ENUM,
-  //   values: ["starter", "pro", "business"],
-  //   defaultValue: "starter",
-  // },
+  subscription: {
+    type: DataTypes.ENUM,
+    values: ["starter", "pro", "business"],
+    defaultValue: "starter",
+  },
 });
 
 // User.sync({ alter: true });
