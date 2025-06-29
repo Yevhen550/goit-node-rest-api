@@ -6,18 +6,27 @@ const Contact = sequelize.define("contact", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+
   email: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+
   phone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+
   favorite: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+
+  avatarURL: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+
   owner: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -30,6 +39,6 @@ const Contact = sequelize.define("contact", {
   },
 });
 
-// Contact.sync();
+// Contact.sync({ alter: true });
 
 export default Contact;
