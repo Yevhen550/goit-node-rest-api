@@ -6,29 +6,25 @@ const registerController = async (req, res) => {
   const { email, subscription } = await authServices.registerUser(req.body);
 
   res.status(201).json({
-    email,
-    subscription,
+    user: { email, subscription },
   });
 };
 
 const loginController = async (req, res) => {
-  const { token, user, contacts } = await authServices.loginUser(req.body);
+  const { token, user } = await authServices.loginUser(req.body);
 
   res.json({
     token,
     user,
-    contacts,
   });
 };
 
 const getCurrentController = async (req, res) => {
-  const { email, subscription, id } = req.user;
-  const contacts = await listContacts({ owner: id });
+  const { email, subscription } = req.user;
 
   res.json({
     email,
     subscription,
-    contacts,
   });
 };
 

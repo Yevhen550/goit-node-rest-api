@@ -1,6 +1,10 @@
+import { rename } from "node:fs/promises";
+import { resolve, join } from "node:path";
 import * as contactsService from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
+
+const avatarsDir = resolve("public", "avatars");
 
 const getAllContactsController = async (req, res) => {
   const { id } = req.user;
@@ -26,8 +30,21 @@ const createContactController = async (req, res) => {
     throw HttpError(400, "Body must have at least one field");
   }
 
+  let avatarURL = null;
+  if (req.file) {
+    const { path: oldPath, filename } = req.file;
+    const newPath = join(avatarsDir, filename);
+
+    await rename(oldPath, newPath);
+    avatarURL = join("avatars", filename);
+  }
+
   const { id } = req.user;
-  const result = await contactsService.addContact({ ...req.body, owner: id });
+  const result = await contactsService.addContact({
+    ...req.body,
+    avatarURL,
+    owner: id,
+  });
 
   res.status(201).json(result);
 };
