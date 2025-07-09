@@ -3,6 +3,7 @@ import { resolve, join } from "node:path";
 import * as contactsService from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
+import { findUser } from "../services/authServices.js";
 
 const avatarsDir = resolve("public", "avatars");
 
@@ -92,6 +93,30 @@ const updateStatusContactController = async (req, res) => {
   res.json(result);
 };
 
+const updateAvatarController = async (req, res) => {
+  const { id } = req.user;
+
+  if (!req.file) {
+    throw HttpError(400, "Avatar file is required");
+  }
+
+  const { path: tempPath, filename } = req.file;
+  const avatarPath = join(avatarsDir, filename);
+  const avatarURL = join("avatars", filename);
+
+  await rename(tempPath, avatarPath);
+
+  const user = await findUser({ id });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  user.avatarURL = avatarURL;
+  await user.save();
+
+  res.status(200).json({ avatarURL });
+};
+
 export default {
   getAllContactsController: ctrlWrapper(getAllContactsController),
   getOneContactController: ctrlWrapper(getOneContactController),
@@ -99,4 +124,5 @@ export default {
   createContactController: ctrlWrapper(createContactController),
   updateContactController: ctrlWrapper(updateContactController),
   updateStatusContactController: ctrlWrapper(updateStatusContactController),
+  updateAvatarController: ctrlWrapper(updateAvatarController),
 };
