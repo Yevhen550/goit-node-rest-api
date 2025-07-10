@@ -17,7 +17,7 @@ contactsRouter.get("/", contactsControllers.getAllContactsController);
 contactsRouter.get("/:id", contactsControllers.getOneContactController);
 
 contactsRouter.post(
-  "/",
+  "/",  
   upload.single("avatar"),
   validateBody(createContactSchema),
   contactsControllers.createContactController

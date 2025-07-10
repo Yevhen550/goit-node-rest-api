@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import gravatar from "gravatar";
 import User from "../db/User.js";
 import HttpError from "../helpers/HttpError.js";
 import { listContacts } from "./contactsServices.js";
@@ -12,7 +13,9 @@ export const findUser = (query) =>
 export const registerUser = async (payload) => {
   const hashPassword = await bcrypt.hash(payload.password, 10);
 
-  return User.create({ ...payload, password: hashPassword });
+  const avatarURL = gravatar.url(payload.email, { s: "200", d: "retro" }, true);
+
+  return User.create({ ...payload, password: hashPassword, avatarURL });
 };
 
 export const loginUser = async ({ email, password }) => {

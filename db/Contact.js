@@ -22,10 +22,7 @@ const Contact = sequelize.define("contact", {
     defaultValue: false,
   },
 
-  avatarURL: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  
 
   owner: {
     type: DataTypes.INTEGER,
