@@ -19,6 +19,10 @@ const User = sequelize.define("user", {
       msg: "Email in use",
     },
   },
+  avatarURL: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 
   token: {
     type: DataTypes.STRING,
