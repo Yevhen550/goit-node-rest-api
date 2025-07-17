@@ -34,9 +34,19 @@ const logoutController = async (req, res) => {
   res.status(204).end();
 };
 
+const resendVerifyEmailController = async (req, res) => {
+  const { email } = req.body;
+  await authServices.resendVerifyEmail(email);
+
+  res.json({
+    message: "Verify email resend",
+  });
+};
+
 export default {
   registerController: ctrlWrapper(registerController),
   loginController: ctrlWrapper(loginController),
   getCurrentController: ctrlWrapper(getCurrentController),
   logoutController: ctrlWrapper(logoutController),
+  resendVerifyEmailController: ctrlWrapper(resendVerifyEmailController),
 };
