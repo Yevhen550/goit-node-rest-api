@@ -1,11 +1,9 @@
-import { rename } from "node:fs/promises";
-import { resolve, join } from "node:path";
+import { unlink } from "node:fs/promises";
 import * as contactsService from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import { findUser } from "../services/authServices.js";
-
-const avatarsDir = resolve("public", "avatars");
+import cloudinary from "../helpers/cloudinary.js";
 
 const getAllContactsController = async (req, res) => {
   const { id } = req.user;
@@ -30,14 +28,15 @@ const createContactController = async (req, res) => {
   if (!Object.keys(req.body).length) {
     throw HttpError(400, "Body must have at least one field");
   }
-
   let avatarURL = null;
-  if (req.file) {
-    const { path: oldPath, filename } = req.file;
-    const newPath = join(avatarsDir, filename);
 
-    await rename(oldPath, newPath);
-    avatarURL = join("avatars", filename);
+  if (req.file) {
+    const { url } = await cloudinary.uploader.upload(req.file.path, {
+      folder: "avatars",
+      use_filename: true,
+    });
+    avatarURL = url;
+    await unlink(req.file.path);
   }
 
   const { id } = req.user;
