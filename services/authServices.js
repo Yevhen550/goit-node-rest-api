@@ -56,3 +56,15 @@ export const logoutUser = async ({ email }) => {
   user.token = "";
   await user.save();
 };
+
+export const resendVerifyEmail = async (email) => {
+  const user = await findUser({ email });
+
+  if (!user) {
+    throw HttpError(404, "Email not found");
+  }
+
+  if (user.verify) {
+    throw HttpError(404, "Email already verify");
+  }
+};

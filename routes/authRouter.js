@@ -1,7 +1,11 @@
 import express from "express";
 
 import validateBody from "../helpers/validateBody.js";
-import { authRegisterSchema, authLoginSchema } from "../schemas/authSchemas.js";
+import {
+  authRegisterSchema,
+  authLoginSchema,
+  authVerifySchema,
+} from "../schemas/authSchemas.js";
 import authControllers from "../controllers/authControllers.js";
 import authenticate from "../middlewars/authenticate.js";
 import upload from "../middlewars/upload.js";
@@ -20,6 +24,8 @@ authRouter.post(
   validateBody(authLoginSchema),
   authControllers.loginController
 );
+
+authRouter.post("/verify", validateBody(authVerifySchema), authControllers.resendVerifyEmailController);
 
 authRouter.get("/current", authenticate, authControllers.getCurrentController);
 
