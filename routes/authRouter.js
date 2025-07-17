@@ -25,7 +25,16 @@ authRouter.post(
   authControllers.loginController
 );
 
-authRouter.post("/verify", validateBody(authVerifySchema), authControllers.resendVerifyEmailController);
+authRouter.get(
+  "/verify/:verificationToken",
+  authControllers.verifyEmailController
+);
+
+authRouter.post(
+  "/verify",
+  validateBody(authVerifySchema),
+  authControllers.resendVerifyEmailController
+);
 
 authRouter.get("/current", authenticate, authControllers.getCurrentController);
 

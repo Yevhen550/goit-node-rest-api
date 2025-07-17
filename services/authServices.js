@@ -4,6 +4,9 @@ import User from "../db/User.js";
 import HttpError from "../helpers/HttpError.js";
 import { listContacts } from "./contactsServices.js";
 import { createToken } from "../helpers/jwt.js";
+import { sendVerificationEmail } from "../helpers/sendEmail.js";
+import { nanoid } from "nanoid";
+
 
 export const findUser = (query) =>
   User.findOne({
@@ -15,7 +18,22 @@ export const registerUser = async (payload) => {
 
   const avatarURL = gravatar.url(payload.email, { s: "200", d: "retro" }, true);
 
-  return User.create({ ...payload, password: hashPassword, avatarURL });
+  const verificationToken = nanoid(); 
+
+  const newUser = await User.create({
+    ...payload,
+    password: hashPassword,
+    avatarURL,
+    verify: false,
+    verificationToken, 
+  });
+
+  await sendVerificationEmail(payload.email, verificationToken);
+
+  return {
+    email: newUser.email,
+    subscription: newUser.subscription,
+  };
 };
 
 export const loginUser = async ({ email, password }) => {
@@ -65,6 +83,6 @@ export const resendVerifyEmail = async (email) => {
   }
 
   if (user.verify) {
-    throw HttpError(404, "Email already verify");
+    throw HttpError(401, "Email already verify");
   }
 };
