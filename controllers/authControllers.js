@@ -1,6 +1,8 @@
 import * as authServices from "../services/authServices.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import User from "../db/User.js";
+import { sendVerificationEmail } from "../helpers/sendEmail.js";
+
 
 const registerController = async (req, res) => {
   const { email, subscription } = await authServices.registerUser(req.body);
